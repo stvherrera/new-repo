@@ -34,7 +34,7 @@ def scrape_espn_boxing_schedule():
 def send_whatsapp_notification(schedule):
     # Twilio account details
     account_sid = "AC061eebec5defb6fc7c5725d9e389074a"
-    auth_token = "0a2663fff995e88ae9b4a54a89bd8a3e"
+    auth_token = "359dd6089d6fe65f6e68127a2e95132b"
     twilio_phone_number = "+12294045441"
     your_phone_number = "+50689077447"
 
