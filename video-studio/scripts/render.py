@@ -2,15 +2,16 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import subprocess
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
-BUILD = ROOT / "build"
+BUILD = ROOT / os.environ.get("VIDEO_BUILD", "build")
 ASSETS = ROOT / "assets"
-PROJECT = ROOT / "project.json"
+PROJECT = ROOT / os.environ.get("VIDEO_PROJECT", "project.json")
 
 
 def run(cmd: list[str]) -> None:
@@ -54,9 +55,7 @@ def make_scene_frame(scene: dict, cfg: dict, output: Path) -> None:
     if base is None:
         base = Image.new("RGB", (w, h), style.get("background", "#081019"))
 
-    # Documentary treatment: blur very slightly, darken, then add a left-to-right vignette.
-    if base:
-        base = base.filter(ImageFilter.GaussianBlur(radius=0.25))
+    base = base.filter(ImageFilter.GaussianBlur(radius=0.25))
     overlay = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     od = ImageDraw.Draw(overlay)
     for x in range(w):
@@ -73,7 +72,6 @@ def make_scene_frame(scene: dict, cfg: dict, output: Path) -> None:
 
     title_font = font(64)
     title = scene["title"]
-    # Simple wrapping tuned for 1080p.
     words = title.split()
     lines, current = [], ""
     for word in words:
@@ -105,7 +103,8 @@ def make_scene_frame(scene: dict, cfg: dict, output: Path) -> None:
         draw.text((x + 30, card_y + 13), item, font=card_font, fill=text)
         x += tw + 20
 
-    draw.text((90, h - 100), "WEB ARCHITECTURE STUDY GUIDE", font=font(24), fill=(205, 220, 226, 210))
+    footer = cfg.get("footer", "WEB ARCHITECTURE STUDY GUIDE")
+    draw.text((90, h - 100), footer, font=font(24), fill=(205, 220, 226, 210))
     base.convert("RGB").save(output, quality=94)
 
 
@@ -137,7 +136,6 @@ def main() -> None:
                 break
 
         if video_asset:
-            # Loop real footage as needed; keep it muted. A slow crop/scale normalizes mixed sources.
             run([
                 "ffmpeg", "-y", "-stream_loop", "-1", "-i", str(video_asset),
                 "-t", f"{duration:.3f}", "-an",
@@ -148,7 +146,6 @@ def main() -> None:
         else:
             make_scene_frame(scene, cfg, image_path)
             frames_count = max(2, int(duration * fps))
-            # Ken Burns-style motion on stills for a documentary feel.
             vf = (
                 f"scale=2048:-2,zoompan=z='min(zoom+0.00020,1.07)':"
                 f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
