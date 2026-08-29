@@ -1,0 +1,68 @@
+name: Render Study Video
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ai-video-studio
+      - main
+    paths:
+      - 'video-studio/**'
+      - '.github/workflows/render-study-video.yml'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/torch
+          key: kokoro-${{ runner.os }}-v1
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r video-studio/requirements.txt
+
+      - name: Generate narration with Kokoro
+        run: python video-studio/scripts/tts_kokoro.py
+
+      - name: Render documentary master
+        run: python video-studio/scripts/render.py
+
+      - name: Technical QA
+        run: |
+          ffprobe -v error \
+            -show_entries format=duration:stream=codec_name,width,height,r_frame_rate,sample_rate \
+            -of json \
+            video-studio/build/How_Modern_Web_Applications_Actually_Work.mp4 \
+            | tee video-studio/build/ffprobe.json
+
+      - name: Upload final video
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-architecture-study-video
+          path: |
+            video-studio/build/How_Modern_Web_Applications_Actually_Work.mp4
+            video-studio/build/timings.json
+            video-studio/build/ffprobe.json
+          retention-days: 5
+          if-no-files-found: error
