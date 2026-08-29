@@ -1,0 +1,116 @@
+{
+  "title": "Cómo funcionan realmente las aplicaciones web modernas",
+  "footer": "GUÍA DE ESTUDIO DE ARQUITECTURA WEB",
+  "output": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "filename": "Como_Funcionan_Realmente_Las_Aplicaciones_Web.mp4"
+  },
+  "tts": {
+    "engine": "kokoro-82m",
+    "lang_code": "e",
+    "voice": "em_alex",
+    "speed": 0.98,
+    "tail_silence_seconds": 0.45
+  },
+  "style": {
+    "real_footage_target_percent": 45,
+    "motion_graphics_target_percent": 55,
+    "background": "#081019",
+    "accent": "#55d6be",
+    "text": "#f2f6f8"
+  },
+  "scenes": [
+    {
+      "id": "01",
+      "title": "El recorrido oculto detrás de una página web",
+      "narration": "Escribes una dirección web, presionas Enter y aparece una página. Parece instantáneo. Pero detrás de esa acción tan simple, varios sistemas independientes ya comenzaron a trabajar juntos: DNS, hosting, código del frontend, servicios de backend, APIs, reglas de seguridad y fuentes de datos. En esta guía seguiremos ese recorrido invisible desde el navegador hacia el resto de la arquitectura y construiremos un modelo mental completo de cómo funciona realmente una aplicación web moderna.",
+      "diagram": ["Navegador", "DNS", "Hosting", "Frontend", "Backend", "Datos"]
+    },
+    {
+      "id": "02",
+      "title": "Frontend y Backend",
+      "narration": "La primera distinción importante es entre frontend y backend. El frontend es la parte que se ejecuta en el navegador y crea lo que la persona ve: páginas, formularios, botones, tablas, navegación y el estado visible de la aplicación. Frameworks como React suelen utilizarse en esta capa. El backend es diferente. Se ejecuta en un servidor, aplica reglas de negocio, valida autenticación, procesa solicitudes y se comunica con bases de datos o servicios externos. Son programas separados que se conectan mediante solicitudes de red.",
+      "diagram": ["Frontend", "API HTTP", "Backend"]
+    },
+    {
+      "id": "03",
+      "title": "Localhost y puertos",
+      "narration": "Antes de que una aplicación sea pública, los desarrolladores normalmente ejecutan sus servicios en su propia computadora. El nombre localhost significa esta computadora. La dirección ciento veintisiete punto cero punto cero punto uno es la dirección de loopback que apunta de regreso a la misma máquina. Los puertos permiten separar servicios que funcionan al mismo tiempo. Un frontend podría usar el puerto tres mil, una API el puerto ocho mil y una base de datos local el puerto veintisiete mil diecisiete. Una sola computadora puede comportarse como varios servicios de red distintos.",
+      "diagram": ["localhost:3000", "localhost:8000", "127.0.0.1:27017"]
+    },
+    {
+      "id": "04",
+      "title": "Código fuente, Git y GitHub",
+      "narration": "Los desarrolladores trabajan con código fuente: los archivos legibles por personas que definen la aplicación. Git registra cómo cambian esos archivos con el tiempo y crea un historial que puede inspeccionarse, compararse y restaurarse. GitHub puede almacenar en línea el repositorio principal, incluyendo ramas, pull requests y documentación. Ese repositorio se convierte en un punto importante de entrega. Las plataformas de hosting pueden obtener el código desde allí e iniciar un proceso controlado de build o despliegue.",
+      "diagram": ["Desarrollador", "Historial Git", "Repositorio", "Despliegue"]
+    },
+    {
+      "id": "05",
+      "title": "npm, Yarn y dependencias",
+      "narration": "La mayoría de aplicaciones web no contienen únicamente código escrito por un solo equipo. También dependen de librerías externas. Gestores de paquetes como npm y Yarn instalan y administran esas dependencias. Un archivo de paquetes describe lo que necesita el proyecto, mientras que un lock file registra versiones exactas. Ese archivo es importante porque hace reproducible el árbol de dependencias. Un despliegue no debería instalar silenciosamente versiones distintas de las que fueron probadas durante el desarrollo.",
+      "diagram": ["package.json", "lock file", "Dependencias"]
+    },
+    {
+      "id": "06",
+      "title": "Del código fuente al artefacto de build",
+      "narration": "Un proyecto de desarrollo no es exactamente lo mismo que los archivos que finalmente recibe un navegador. Un proceso de build transforma el código fuente en recursos optimizados. En un proyecto frontend, normalmente produce HTML, CSS, JavaScript y recursos estáticos dentro de un directorio como build o dist. Esos archivos generados forman el artefacto de build. Un servicio de hosting estático puede servir ese artefacto eficientemente sin exponer todo el entorno de desarrollo a cada visitante.",
+      "diagram": ["Código fuente", "Build", "HTML", "CSS", "JavaScript", "Hosting estático"]
+    },
+    {
+      "id": "07",
+      "title": "El hosting cumple funciones diferentes",
+      "narration": "Hosting no significa una sola función. Un host estático puede servir el frontend compilado. Un host de aplicaciones puede ejecutar el código del backend. Un servicio administrado de base de datos puede almacenar registros persistentes. Y un servicio completamente distinto puede proporcionar datos de negocio u otra API. Estos componentes no necesitan vivir con el mismo proveedor. Lo importante es que tengan direcciones de red confiables, las credenciales correctas y responsabilidades claramente definidas.",
+      "diagram": ["Host estático", "Host de aplicación", "Base de datos", "Servicio externo"]
+    },
+    {
+      "id": "08",
+      "title": "Docker: una unidad de ejecución reproducible",
+      "narration": "Docker ayuda a empaquetar software de backend dentro de una unidad de ejecución reproducible. El contenedor incluye la aplicación, su runtime, sus dependencias y las instrucciones de inicio. Es útil imaginarlo como un paquete consistente y no como una computadora completamente separada. La misma imagen de contenedor puede probarse localmente y después iniciarse en un proveedor de hosting. Eso reduce la posibilidad de que el software se comporte diferente solamente porque cambió el entorno subyacente.",
+      "diagram": ["Runtime", "Código", "Dependencias", "Inicio", "Contenedor"]
+    },
+    {
+      "id": "09",
+      "title": "APIs y métodos HTTP",
+      "narration": "El frontend y el backend normalmente se comunican mediante una interfaz de programación de aplicaciones, o API. Los métodos HTTP describen el tipo de acción solicitada. GET normalmente recupera un recurso. POST normalmente envía datos para crear una acción o un recurso. Un navegador podría solicitar GET barra api barra products para recuperar un catálogo, o enviar POST barra api barra login para enviar credenciales. La API proporciona a ambos lados un contrato predecible de comunicación.",
+      "diagram": ["GET /api/products", "POST /api/login", "Respuesta"]
+    },
+    {
+      "id": "10",
+      "title": "JSON, OpenAPI y Swagger",
+      "narration": "Las respuestas de una API suelen utilizar JSON, un formato de texto para datos estructurados. Puede representar objetos, arreglos, cadenas de texto, números, valores booleanos y valores nulos. Pero una API también necesita documentación. OpenAPI es una especificación legible por máquinas que describe rutas, parámetros, cuerpos de solicitudes y respuestas. Una interfaz estilo Swagger puede convertir esa especificación en documentación interactiva, permitiendo a los desarrolladores inspeccionar y probar endpoints sin construir primero una interfaz separada.",
+      "diagram": ["JSON", "OpenAPI", "Documentación interactiva"]
+    },
+    {
+      "id": "11",
+      "title": "Variables de entorno y secretos",
+      "narration": "Las aplicaciones también necesitan configuración que cambia entre entornos. La URL base de una API puede ser diferente en desarrollo local y en producción, por lo que no debería estar repetida por todo el código fuente. Las variables de entorno permiten inyectar configuración de una forma más limpia. Pero existe una diferencia de seguridad importante: los valores incluidos en un build de frontend pueden ser visibles para el navegador. Los secretos reales, como claves privadas de API o credenciales de bases de datos, deben permanecer del lado del servidor.",
+      "diagram": ["Configuración visible", "Secretos del servidor"]
+    },
+    {
+      "id": "12",
+      "title": "CORS: quién puede llamar a la API",
+      "narration": "Los navegadores aplican un modelo de seguridad basado en el origen. Si un frontend cargado desde un origen intenta llamar una API ubicada en otro, el navegador revisa las reglas de Cross-Origin Resource Sharing, o CORS. El backend puede permitir explícitamente los orígenes frontend de confianza. Si un origen no está permitido, el navegador puede bloquear el acceso a la respuesta aunque el servidor sea alcanzable. CORS no es por sí mismo un problema de hosting; es una política de seguridad del navegador controlada mediante encabezados de respuesta del servidor.",
+      "diagram": ["app.example.com", "BLOQUEADO", "Lista CORS", "api.example.com", "PERMITIDO"]
+    },
+    {
+      "id": "13",
+      "title": "DNS: convertir nombres en destinos",
+      "narration": "Las personas recuerdan nombres con mayor facilidad que direcciones numéricas de red. El sistema de nombres de dominio, o DNS, conecta nombres legibles por personas con destinos de red. Un dominio raíz puede tener muchos subdominios y cada subdominio puede apuntar a un servicio diferente. Un nombre puede llevar a un host de frontend mientras otro lleva a un host de API. Por eso DNS forma parte de la arquitectura de la aplicación: determina cómo los usuarios y el software encuentran los servicios que hacen funcionar el sistema.",
+      "diagram": ["example.com", "app.example.com", "api.example.com", "Destinos"]
+    },
+    {
+      "id": "14",
+      "title": "CNAME, TTL y propagación",
+      "narration": "Un registro CNAME asigna un hostname a otro hostname. Por ejemplo, app punto example punto com podría ser un alias de un hostname proporcionado por un proveedor de hosting. Las respuestas DNS se almacenan temporalmente en caché, y el Time to Live, o TTL, ayuda a determinar cuánto tiempo puede reutilizarse una respuesta almacenada. Cuando cambia un registro DNS, diferentes cachés expiran en momentos distintos. A ese retraso se le suele llamar propagación, aunque lo que realmente ocurre es almacenamiento distribuido en caché entre muchos resolvedores.",
+      "diagram": ["Alias CNAME", "Hostname destino", "TTL", "Cachés distribuidas"]
+    },
+    {
+      "id": "15",
+      "title": "Seguir una solicitud de principio a fin",
+      "narration": "Ahora unamos todo. Una persona escribe una dirección web. DNS resuelve el nombre del frontend hacia su servicio de hosting. El host devuelve el HTML, CSS y JavaScript construidos. El navegador ejecuta el frontend y envía una solicitud de API al dominio del backend. El backend valida la solicitud, aplica la lógica de la aplicación y lee o escribe datos. La respuesta regresa como datos estructurados, frecuentemente JSON, y el frontend actualiza la interfaz. Cuando puedes seguir esa cadena completa, las tecnologías dejan de parecer vocabulario aislado y comienzan a comportarse como un solo sistema comprensible.",
+      "diagram": ["Usuario", "DNS", "Host estático", "Frontend", "API Backend", "Datos", "JSON", "Interfaz"]
+    }
+  ]
+}
