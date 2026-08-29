@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -8,8 +9,8 @@ import soundfile as sf
 from kokoro import KPipeline
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT = ROOT / "project.json"
-BUILD = ROOT / "build"
+PROJECT = ROOT / os.environ.get("VIDEO_PROJECT", "project.json")
+BUILD = ROOT / os.environ.get("VIDEO_BUILD", "build")
 AUDIO_DIR = BUILD / "audio"
 SAMPLE_RATE = 24000
 
@@ -67,8 +68,8 @@ def main() -> None:
 
     master = np.concatenate(master_parts)
     sf.write(BUILD / "narration_master.wav", master, SAMPLE_RATE)
-    (BUILD / "timings.json").write_text(json.dumps(timing, indent=2), encoding="utf-8")
-    print(f"Generated {len(timing)} scenes, total {cursor:.1f}s, voice={voice}")
+    (BUILD / "timings.json").write_text(json.dumps(timing, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"Generated {len(timing)} scenes, total {cursor:.1f}s, voice={voice}, project={PROJECT.name}")
 
 
 if __name__ == "__main__":
