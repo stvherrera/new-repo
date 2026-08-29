@@ -1,0 +1,115 @@
+{
+  "title": "How Modern Web Applications Actually Work",
+  "output": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "filename": "How_Modern_Web_Applications_Actually_Work.mp4"
+  },
+  "tts": {
+    "engine": "kokoro-82m",
+    "lang_code": "a",
+    "voice": "am_michael",
+    "speed": 0.98,
+    "tail_silence_seconds": 0.45
+  },
+  "style": {
+    "real_footage_target_percent": 45,
+    "motion_graphics_target_percent": 55,
+    "background": "#081019",
+    "accent": "#55d6be",
+    "text": "#f2f6f8"
+  },
+  "scenes": [
+    {
+      "id": "01",
+      "title": "The Hidden Journey Behind a Web Page",
+      "narration": "You type a web address, press Enter, and a page appears. It feels instantaneous. But behind that simple action, several independent systems have already started working together: DNS, hosting, frontend code, backend services, APIs, security rules, and data sources. In this guide, we will follow that invisible journey from the browser outward and build one complete mental model of how a modern web application actually works.",
+      "diagram": ["Browser", "DNS", "Hosting", "Frontend", "Backend", "Data"]
+    },
+    {
+      "id": "02",
+      "title": "Frontend and Backend",
+      "narration": "The first distinction is between the frontend and the backend. The frontend is the part that runs in the browser and creates what the user sees: pages, forms, buttons, tables, navigation, and visible application state. Frameworks such as React are commonly used for this layer. The backend is different. It runs on a server, applies business rules, validates authentication, processes requests, and communicates with databases or external services. They are separate programs, connected through network requests.",
+      "diagram": ["Frontend", "HTTP API", "Backend"]
+    },
+    {
+      "id": "03",
+      "title": "Localhost and Ports",
+      "narration": "Before an application becomes public, developers usually run its services on their own computer. The name localhost means this computer. The address one two seven dot zero dot zero dot one is the loopback address that points back to the same machine. Ports separate services running at the same time. A frontend might use port three thousand, an API port eight thousand, and a local database port twenty seven thousand seventeen. One computer can therefore behave like several different network services.",
+      "diagram": ["localhost:3000", "localhost:8000", "127.0.0.1:27017"]
+    },
+    {
+      "id": "04",
+      "title": "Source Code, Git, and GitHub",
+      "narration": "Developers work with source code: the human-readable files that define the application. Git records how those files change over time, creating a history that can be inspected, compared, and restored. GitHub can then store the canonical repository online, including branches, pull requests, and documentation. This repository becomes an important handoff point. Hosting platforms can pull the source from it and begin a controlled build or deployment process.",
+      "diagram": ["Developer", "Git history", "Repository", "Deployment"]
+    },
+    {
+      "id": "05",
+      "title": "npm, Yarn, and Dependencies",
+      "narration": "Most web applications do not contain only code written by one team. They also depend on external libraries. Package managers such as npm and Yarn install and manage those dependencies. A package file describes what the project needs, while a lock file records exact versions. That lock file matters because it makes the dependency graph reproducible. A deployment should not quietly install different versions from the ones that were tested during development.",
+      "diagram": ["package.json", "lock file", "dependencies"]
+    },
+    {
+      "id": "06",
+      "title": "From Source Code to a Build Artifact",
+      "narration": "A development project is not the same thing as the files a browser ultimately receives. A build process transforms source code into optimized assets. In a frontend project, that often means producing HTML, CSS, JavaScript, and static resources inside a directory such as build or dist. Those generated files are the build artifact. A static hosting service can serve that artifact efficiently without exposing the entire development environment to every visitor.",
+      "diagram": ["Source", "Build", "HTML", "CSS", "JavaScript", "Static host"]
+    },
+    {
+      "id": "07",
+      "title": "Hosting Has Different Jobs",
+      "narration": "Hosting is not one single job. A static host can serve the compiled frontend. An application host can execute backend code. A managed database service can store persistent records. A completely different service may provide business data or another API. These components do not need to live with the same provider. What matters is that they have reliable network addresses, the right credentials, and clearly defined responsibilities.",
+      "diagram": ["Static host", "Application host", "Database", "External service"]
+    },
+    {
+      "id": "08",
+      "title": "Docker: A Reproducible Execution Unit",
+      "narration": "Docker helps package backend software into a reproducible execution unit. The container includes the application, its runtime, dependencies, and startup instructions. It is useful to think of it as a consistent package rather than as a full separate computer. The same container image can be tested locally and then started by a hosting provider. That reduces the chance that the software behaves differently simply because the underlying environment changed.",
+      "diagram": ["Runtime", "App code", "Dependencies", "Startup command", "Container"]
+    },
+    {
+      "id": "09",
+      "title": "APIs and HTTP Methods",
+      "narration": "The frontend and backend usually communicate through an application programming interface, or API. HTTP methods describe the kind of action being requested. GET typically retrieves a resource. POST typically sends data to create an action or resource. A browser might request GET slash api slash products to retrieve a catalog, or send POST slash api slash login to submit credentials. The API gives both sides a predictable contract for communication.",
+      "diagram": ["GET /api/products", "POST /api/login", "Response"]
+    },
+    {
+      "id": "10",
+      "title": "JSON, OpenAPI, and Swagger",
+      "narration": "API responses commonly use JSON, a text format for structured data. It can represent objects, arrays, strings, numbers, booleans, and null values. But an API also needs documentation. OpenAPI is a machine-readable specification that describes routes, parameters, request bodies, and responses. A Swagger-style interface can render that specification as interactive documentation, letting developers inspect and test endpoints without first building a separate interface.",
+      "diagram": ["JSON", "OpenAPI", "Interactive API docs"]
+    },
+    {
+      "id": "11",
+      "title": "Environment Variables and Secrets",
+      "narration": "Applications also need configuration that changes between environments. An API base URL might be different in local development and production, so it should not be scattered through the source code. Environment variables provide a cleaner way to inject configuration. But there is an important security distinction: values included in a frontend build can be visible to the browser. True secrets, such as private API keys or database credentials, belong on the server side.",
+      "diagram": ["Browser-visible config", "Server-side secrets"]
+    },
+    {
+      "id": "12",
+      "title": "CORS: Who Is Allowed to Call the API?",
+      "narration": "Browsers apply an origin-based security model. If a frontend loaded from one origin tries to call an API on another, the browser checks Cross-Origin Resource Sharing rules, or CORS. The backend can explicitly allow trusted frontend origins. If the origin is not permitted, the browser can block access to the response even when the server itself is reachable. CORS is therefore not a hosting problem; it is a browser security policy controlled through server response headers.",
+      "diagram": ["app.example.com", "BLOCKED", "CORS allow-list", "api.example.com", "ALLOWED"]
+    },
+    {
+      "id": "13",
+      "title": "DNS: Turning Names into Destinations",
+      "narration": "People remember names better than numeric network addresses. The Domain Name System, or DNS, connects human-readable names to network destinations. A root domain can have many subdomains, and each subdomain can point to a different service. One name might lead to a frontend host while another leads to an API host. DNS is therefore part of the application architecture: it determines how users and software find the services that make the system work.",
+      "diagram": ["example.com", "app.example.com", "api.example.com", "Destinations"]
+    },
+    {
+      "id": "14",
+      "title": "CNAME, TTL, and Propagation",
+      "narration": "A CNAME record maps one hostname to another hostname. For example, app dot example dot com might be an alias for a hostname supplied by a hosting provider. DNS responses are cached, and the Time to Live, or TTL, helps determine how long a cached answer may be reused. When a DNS record changes, different caches expire at different moments. That delay is commonly called propagation, although what is really happening is distributed caching across many resolvers.",
+      "diagram": ["CNAME alias", "Target hostname", "TTL", "Distributed caches"]
+    },
+    {
+      "id": "15",
+      "title": "Follow One Request End to End",
+      "narration": "Now put everything together. A user enters a web address. DNS resolves the frontend name to its hosting service. The host returns the built HTML, CSS, and JavaScript. The browser executes the frontend and sends an API request to the backend domain. The backend validates the request, applies application logic, and reads or writes data. The response returns as structured data, often JSON, and the frontend updates the interface. Once you can follow that chain, the individual technologies stop looking like isolated vocabulary and start behaving like one understandable system.",
+      "diagram": ["User", "DNS", "Static host", "Frontend", "Backend API", "Data", "JSON", "Updated UI"]
+    }
+  ]
+}
