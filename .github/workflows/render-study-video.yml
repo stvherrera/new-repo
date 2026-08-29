@@ -1,4 +1,4 @@
-name: Render Study Video
+name: Render Study Video Bilingual
 
 on:
   workflow_dispatch:
@@ -14,6 +14,24 @@ jobs:
   render:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: en
+            project: project.json
+            build: build_en
+            filename: How_Modern_Web_Applications_Actually_Work.mp4
+            artifact: web-architecture-study-video-en
+          - language: es
+            project: project_es.json
+            build: build_es
+            filename: Como_Funcionan_Realmente_Las_Aplicaciones_Web.mp4
+            artifact: web-architecture-study-video-es
+
+    env:
+      VIDEO_PROJECT: ${{ matrix.project }}
+      VIDEO_BUILD: ${{ matrix.build }}
 
     steps:
       - name: Checkout
@@ -30,7 +48,7 @@ jobs:
           path: |
             ~/.cache/huggingface
             ~/.cache/torch
-          key: kokoro-${{ runner.os }}-v1
+          key: kokoro-${{ runner.os }}-v2
 
       - name: Install system dependencies
         run: |
@@ -53,16 +71,16 @@ jobs:
           ffprobe -v error \
             -show_entries format=duration:stream=codec_name,width,height,r_frame_rate,sample_rate \
             -of json \
-            video-studio/build/How_Modern_Web_Applications_Actually_Work.mp4 \
-            | tee video-studio/build/ffprobe.json
+            "video-studio/${{ matrix.build }}/${{ matrix.filename }}" \
+            | tee "video-studio/${{ matrix.build }}/ffprobe.json"
 
       - name: Upload final video
         uses: actions/upload-artifact@v4
         with:
-          name: web-architecture-study-video
+          name: ${{ matrix.artifact }}
           path: |
-            video-studio/build/How_Modern_Web_Applications_Actually_Work.mp4
-            video-studio/build/timings.json
-            video-studio/build/ffprobe.json
+            video-studio/${{ matrix.build }}/${{ matrix.filename }}
+            video-studio/${{ matrix.build }}/timings.json
+            video-studio/${{ matrix.build }}/ffprobe.json
           retention-days: 5
           if-no-files-found: error
